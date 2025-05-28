@@ -1,48 +1,152 @@
 <!doctype html>
-
-<!--
-  The Annoying Site
-  https://theannoyingsite.com
-
-  Author:
-    Feross Aboukhadijeh
-    https://feross.org
-
-  Patreon:
-    If you enjoyed this, please support me on Patreon!
-    https://www.patreon.com/feross
--->
-
 <html>
 <head>
   <meta charset='UTF-8'>
-  <meta name='theme-color' content='#fff' class='theme-color'/>
+  <meta name='theme-color' content='#0f0f23' class='theme-color'/>
   <style>
     html, body {
       width: 100%;
       height: 100%;
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'avenir next', avenir,
-        'helvetica neue', helvetica, ubuntu, roboto, noto, 'segoe ui', arial,
-        sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif;
       overflow: hidden;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     }
-    .hello-message {
-      margin: 40px;
+
+    .container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+      position: relative;
+    }
+
+    .panel {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 60px 50px;
+      box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.1),
+        0 0 80px rgba(255, 255, 255, 0.2) inset;
+      border: 1px solid rgba(255, 255, 255, 0.3);
       text-align: center;
+      max-width: 480px;
+      width: 100%;
+      transform: translateY(0);
+      transition: all 0.3s ease;
     }
+
+    .panel:hover {
+      transform: translateY(-5px);
+      box-shadow: 
+        0 30px 60px rgba(0, 0, 0, 0.15),
+        0 0 80px rgba(255, 255, 255, 0.3) inset;
+    }
+
+    .logo {
+      font-size: 3.2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      color: #6b7280;
+      font-size: 1.1rem;
+      margin-bottom: 40px;
+      font-weight: 500;
+    }
+
+    .auth-button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 30px;
+      min-width: 200px;
+    }
+
+    .auth-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .auth-button:hover::before {
+      left: 100%;
+    }
+
+    .auth-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    .auth-button:active {
+      transform: translateY(0);
+    }
+
+    .instructions {
+      color: #6b7280;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-top: 20px;
+    }
+
+    .mobile-instruction {
+      display: none;
+    }
+
+    .cat-container {
+      margin-top: 20px;
+      display: inline-block;
+      position: relative;
+    }
+
+    .cat-image {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid rgba(255, 255, 255, 0.8);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .cat-image:hover {
+      transform: scale(1.05);
+      border-color: #667eea;
+    }
+
     .logout-messages {
       pointer-events: none;
-      color: red;
+      color: #ef4444;
       margin: 40px;
       position: fixed;
       top: 0;
       left: 0;
-      text-shadow: 2px 2px #FFF, 4px 4px 10px #000;
+      text-shadow: 2px 2px rgba(255,255,255,0.8), 4px 4px 10px rgba(0,0,0,0.3);
+      font-weight: 600;
+      z-index: 1000;
     }
-    img {
-      width: 300px;
-    }
+
     @keyframes blurslowly {
       0% {
         filter: none;
@@ -57,23 +161,93 @@
         filter: blur(0);
       }
     }
+
     body {
       animation-name: blurslowly;
       animation-iteration-count: infinite;
       animation-duration: 15s;
       animation-play-state: running;
     }
+
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .particle {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0.3;
+      }
+      50% {
+        transform: translateY(-20px) rotate(180deg);
+        opacity: 0.8;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .panel {
+        padding: 40px 30px;
+        margin: 20px;
+      }
+      
+      .logo {
+        font-size: 2.8rem;
+      }
+      
+      .mobile-instruction {
+        display: block;
+      }
+      
+      .desktop-instruction {
+        display: none;
+      }
+    }
   </style>
 </head>
 <body>
 
-<template>
-  <div class='hello-message'>
-    <h1>Hi there!</h1>
-    <h2>To get started, HOLD DOWN the space key for 3 seconds.</h2>
-    <h3>(or, on mobile, tap the cat!)</h3>
+<div class="particles">
+  <div class="particle" style="left: 10%; top: 20%; width: 4px; height: 4px; animation-delay: 0s;"></div>
+  <div class="particle" style="left: 20%; top: 60%; width: 6px; height: 6px; animation-delay: 1s;"></div>
+  <div class="particle" style="left: 65%; top: 10%; width: 3px; height: 3px; animation-delay: 2s;"></div>
+  <div class="particle" style="left: 85%; top: 70%; width: 5px; height: 5px; animation-delay: 3s;"></div>
+  <div class="particle" style="left: 70%; top: 40%; width: 4px; height: 4px; animation-delay: 4s;"></div>
+</div>
 
-    <img src='/cat-cute.jpg' alt='Cute cat' />
+<template>
+  <div class="container">
+    <div class="panel">
+      <h1 class="logo">IdoZone Panel</h1>
+      <p class="subtitle">מערכת ניהול מתקדמת</p>
+      
+      <button class="auth-button">הזדהות לכניסה לפאנל</button>
+      
+      <div class="instructions">
+        <div class="desktop-instruction">
+          לקבלת גישה, החזק את מקש הרווח למשך 3 שניות
+        </div>
+        <div class="mobile-instruction">
+          בנייד: לחץ על החתול להתחלה
+        </div>
+      </div>
+
+      <div class="cat-container">
+        <img class="cat-image" src="/cat-cute.jpg" alt="Cute cat" onerror="this.style.display='none'" />
+      </div>
+    </div>
   </div>
   <div class='logout-messages'></div>
 </template>
